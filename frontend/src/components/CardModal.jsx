@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 function ArrowButton({ direction = 'left', label, onClick }) {
   return (
@@ -8,8 +8,20 @@ function ArrowButton({ direction = 'left', label, onClick }) {
   );
 }
 
-function CardModal({ card, onClose, onMoveLeft, onMoveRight, onMarkDone }) {
+function CardModal({ card, onClose, onMoveLeft, onMoveRight, onMarkDone, onUndoDone, onSave }) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    if (card) {
+      setTitle(card.title || '');
+      setDescription(card.description || '');
+    }
+  }, [card]);
+
   if (!card) return null;
+
+  const isDone = card.listType === 'DONE';
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -19,14 +31,17 @@ function CardModal({ card, onClose, onMoveLeft, onMoveRight, onMarkDone }) {
           <ArrowButton direction="right" label="In Progress" onClick={onMoveRight} />
         </div>
         <div className="modal-body">
-          <h3>{card.title}</h3>
-          <p className="muted">{card.description || 'No description provided.'}</p>
+          <input className="input title" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <textarea className="input" rows={5} placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
         <div className="modal-footer">
-          <button className="check-btn" onClick={onMarkDone} title="Mark as done">
-            ✓
-          </button>
+          {!isDone ? (
+            <button className="check-btn" onClick={onMarkDone} title="Mark as done">✓</button>
+          ) : (
+            <button className="btn ghost" onClick={onUndoDone} title="Move back to To Do">Uncheck Done</button>
+          )}
           <div className="spacer" />
+          <button className="btn" onClick={() => onSave(title, description)}>Save</button>
           <button className="btn ghost" onClick={onClose}>Close</button>
         </div>
       </div>
