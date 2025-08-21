@@ -26,11 +26,11 @@ function Login() {
         // Fallback demo token for local demo
         localStorage.setItem('token', 'demo-token');
       }
-      navigate('/board');
+      navigate('/boards');
     } catch (err) {
       // Offline/demo mode
       localStorage.setItem('token', 'demo-token');
-      navigate('/board');
+      navigate('/boards');
     }
   };
 

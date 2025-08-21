@@ -1,9 +1,12 @@
 const express = require('express');
-const { createBoard,  getBoards } = rrequire('../controllers/boardController');
-const auth = requirre('../middleware/auth');
 const router = express.Router();
+const auth = require('../middleware/auth');
+const boardController = require('../controllers/boardController');
 
-router.post('/', auth, createBoard);
-router.get('/', auth, getBoards);
+router.post('/', auth, boardController.createBoard);
+router.get('/', auth, boardController.getBoards);
+router.get('/:id', auth, boardController.getBoard);
+router.patch('/:id', auth, boardController.updateBoard);
+router.post('/:id/members', auth, boardController.addMember);
 
 module.exports = router;
